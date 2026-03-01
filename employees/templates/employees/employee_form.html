@@ -1,0 +1,52 @@
+{% extends 'employees/base.html' %}
+{% block content %}
+
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card p-4">
+                    <h4 class="fw-bold mb-4 text-primary">{% if employee %}Update{% else %}Create{% endif %} Employee Master</h4>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Full Name</label>
+                                <input type="text" name="name" class="form-control" value="{{ employee.name|default:'' }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Employee ID</label>
+                                <input type="text" name="emp_id" class="form-control" value="{{ employee.emp_id|default:'' }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Designation</label>
+                                <input type="text" name="designation" class="form-control" value="{{ employee.designation|default:'' }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Basic Salary</label>
+                                <input type="number" name="basic_salary" class="form-control" value="{{ employee.basic_salary|default:'' }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Email Address</label>
+                                <input type="email" name="email" class="form-control" value="{{ employee.email|default:'' }}" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Phone Number</label>
+                                <input type="text" name="phone" class="form-control" value="{{ employee.phone|default:'' }}" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Address</label>
+                                <textarea name="address" class="form-control" rows="2">{{ employee.address|default:'' }}</textarea>
+                            </div>
+                        </div>
+                        <div class="mt-4 d-flex justify-content-between">
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary px-4">Back</a>
+                            <button type="submit" class="btn btn-primary px-5 fw-bold">SAVE DETAILS</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- </body>
+</html> -->
+{% endblock %}
