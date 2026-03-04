@@ -1,0 +1,74 @@
+{% extends 'employees/base.html' %}
+{% block content %}
+<div class="container my-5">
+    <div class="card shadow-lg border-0 mx-auto" style="max-width: 800px;">
+        <div class="card-header bg-dark text-white text-center py-4">
+            <h2 class="mb-0">INEXOFT ERP - PAYSLIP</h2>
+            <p class="mb-0">{{ salary.month }} {{ salary.year }}</p>
+        </div>
+        <div class="card-body p-5">
+            <div class="row mb-4">
+                <div class="col-6">
+                    <h5 class="fw-bold">Employee Details</h5>
+                    <p class="mb-1"><strong>Name:</strong> {{ salary.employee.name }}</p>
+                    <p class="mb-1"><strong>ID:</strong> {{ salary.employee.emp_id }}</p>
+                    <p class="mb-1"><strong>Designation:</strong> {{ salary.employee.designation }}</p>
+                </div>
+                <div class="col-6 text-end">
+                    <h5 class="fw-bold">Payroll Info</h5>
+                    <p class="mb-1"><strong>Leaves:</strong> {{ salary.leaves_taken }}</p>
+                    <p class="mb-1"><strong>Calculation:</strong> 
+                        {% if salary.manual_mode %}
+                        <span class="badge bg-warning text-dark">Manual Override</span>
+                        {% else %}
+                        <span class="badge bg-success">Automated</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <table class="table table-bordered">
+                <thead class="bg-light">
+                    <tr>
+                        <th>Earnings</th>
+                        <th class="text-end">Amount (₹)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Total Gross (Basic + Allowances)</td>
+                        <td class="text-end">{{ salary.calculated_gross|floatformat:2 }}</td>
+                    </tr>
+                    <tr class="table-secondary">
+                        <th>Deductions</th>
+                        <th class="text-end">Amount (₹)</th>
+                    </tr>
+                    <tr>
+                        <td>Total Deductions (PF, ESI, Leaves)</td>
+                        <td class="text-end text-danger">- {{ salary.calculated_deduction|floatformat:2 }}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="table-dark">
+                        <th class="fs-5">Net Payable Salary</th>
+                        <th class="text-end fs-5">₹ {{ salary.net_salary|floatformat:2 }}</th>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <div class="mt-5 d-flex justify-content-between no-print">
+                <button onclick="window.print()" class="btn btn-outline-dark px-4">Print Payslip</button>
+                <a href="{% url 'employee_detail' salary.employee.pk %}" class="btn btn-primary px-4">Back to Employee</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @media print {
+        .no-print { display: none !important; }
+        .navbar { display: none !important; }
+        .card { border: none !important; shadow: none !important; }
+    }
+</style>
+{% endblock %}

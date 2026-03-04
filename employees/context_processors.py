@@ -1,7 +1,6 @@
-# employees/context_processors.py
 from .models import Employee
 
-def employee_list(request):
+def employee_context(request):
     return {
         'all_employees': Employee.objects.all()
     }

@@ -63,13 +63,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-
-                
-    
-        
-        'employees.context_processors.employee_list', # Add this line
-    
-
+                'employees.context_processors.employee_context',  # Your custom processor
             ],
         },
     },

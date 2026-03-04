@@ -6,16 +6,18 @@ from .models import Employee, MonthlySalary # Import your new model here
 # ... (home, dashboard, logout_view, employee_form remain the same) ...
 def home(request):
 
-    return redirect('employees/base.html')
+    return redirect('employees/dashboard.html')
+
+
 
 @login_required
-
 def dashboard(request):
-
+    # We call it 'all_employees' so the navbar dropdown can see it
     employees = Employee.objects.all()
-
-    return render(request, 'employees/dashboard.html', {'employees': employees})
-
+    return render(request, 'employees/dashboard.html', {
+        'employees': employees,      # For the table
+        'all_employees': employees   # For the navbar dropdown
+    })
 
 
 def logout_view(request):
@@ -80,7 +82,10 @@ def employee_form(request, pk=None):
 
 
 
-    return render(request, 'employees/employee_form.html', {'employee': employee})
+    return render(request, 'employees/employee_form.html', {
+    'employee': employee, 
+    'all_employees': Employee.objects.all() # Add this here
+})
 
 def payslip(request, pk):
 
@@ -131,11 +136,11 @@ def process_monthly_salary(request):
     return render(request, 'employees/salary_process_form.html', {'employees': employees})
 
 def monthly_payslip(request, pk):
-    """
-    View to display the final payslip for a specific month.
-    """
     salary = get_object_or_404(MonthlySalary, pk=pk)
-    return render(request, 'employees/monthly_payslip_view.html', {'salary': salary})
+    return render(request, 'employees/monthly_payslip_view.html', {
+        'salary': salary,
+        'all_employees': Employee.objects.all() # This fixes the navbar dropdown!
+    })
 @login_required
 def employee_detail(request, pk):
     employee = get_object_or_404(Employee, pk=pk)

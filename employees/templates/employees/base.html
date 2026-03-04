@@ -8,42 +8,54 @@
         .navbar { background-color: #1a237e; }
         .nav-link { color: rgba(255,255,255,0.8) !important; }
         .nav-link:hover { color: #fff !important; }
+        /* Style for the scrollable dropdown */
+        .dropdown-menu { max-height: 300px; overflow-y: auto; }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark shadow-sm mb-4">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="{% url 'dashboard' %}">INEXOFT ERP</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'employee_add' %}">Employee Creation</a>
-                </li>
-                
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="payslipDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Payslip Master
-                    </a>
-                    <ul class="dropdown-menu shadow" aria-labelledby="payslipDropdown" style="max-height: 300px; overflow-y: auto;">
-                        <li><a class="dropdown-item fw-bold border-bottom" href="{% url 'dashboard' %}">View All Employees</a></li>
-                        {% for emp in all_employees %}
-                            <li>
-                                <a class="dropdown-item" href="{% url 'employee_edit' emp.pk %}">
-                                    {{ emp.name }} <small class="text-muted">({{ emp.emp_id }})</small>
-                                </a>
-                            </li>
-                        {% empty %}
-                            <li><a class="dropdown-item disabled" href="#">No Employees Found</a></li>
-                        {% endfor %}
-                    </ul>
-                </li>
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{% url 'dashboard' %}">INEXOFT ERP</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'employee_add' %}">Employee Creation</a>
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="payslipDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Payslip Master
+                        </a>
+                        <ul class="dropdown-menu shadow" aria-labelledby="payslipDropdown">
+                            <li><a class="dropdown-item fw-bold border-bottom" href="{% url 'dashboard' %}">View All Employees</a></li>
+                            
+                            {% for emp in all_employees %}
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'employee_detail' emp.pk %}">
+                                        {{ emp.name }} <small class="text-muted">({{ emp.emp_id }})</small>
+                                    </a>
+                                </li>
+                            {% empty %}
+                                <li><a class="dropdown-item disabled" href="#">No Employees Found</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
                 </ul>
-            <div class="navbar-nav">
-                <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                <div class="navbar-nav">
+                    <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                </div>
             </div>
         </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}
+        {% endblock %}
     </div>
-</nav>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
