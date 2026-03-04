@@ -1,0 +1,25 @@
+<form method="POST">
+    {% csrf_token %}
+    <label>Select Employee:</label>
+    <select name="employee_id" required>
+        {% for emp in employees %}
+            <option value="{{ emp.id }}">{{ emp.name }} ({{ emp.emp_id }})</option>
+        {% endfor %}
+    </select>
+
+    <input type="text" name="month" placeholder="Month (e.g. March)" required>
+    <input type="number" name="year" value="2026" required>
+
+    <label>Leaves Taken:</label>
+    <input type="number" name="leaves" value="0">
+
+    <hr>
+    <label>
+        <input type="checkbox" name="manual_mode"> Manual Calculation Mode
+    </label>
+    <br>
+    <input type="number" name="custom_earnings" placeholder="Total Earning Override">
+    <input type="number" name="custom_deductions" placeholder="Total Deduction Override">
+
+    <button type="submit">Calculate & Generate Payslip</button>
+</form>

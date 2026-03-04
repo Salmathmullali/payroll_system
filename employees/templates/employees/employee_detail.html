@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-body text-center">
+                <div class="bg-primary text-white rounded-circle d-inline-block p-4 mb-3" style="width: 80px; height: 80px; font-size: 2rem;">
+                    {{ employee.name|slice:":1" }}
+                </div>
+                <h4>{{ employee.name }}</h4>
+                <p class="text-muted">{{ employee.designation }}</p>
+                <hr>
+                <div class="text-start">
+                    <p><strong>ID:</strong> {{ employee.emp_id }}</p>
+                    <p><strong>Email:</strong> {{ employee.email }}</p>
+                    <p><strong>Basic:</strong> ₹{{ employee.basic_salary }}</p>
+                </div>
+                <a href="{% url 'employee_edit' employee.pk %}" class="btn btn-outline-primary w-100 mb-2">Edit Profile</a>
+                <a href="{% url 'process_salary' %}" class="btn btn-success w-100">Generate New Payslip</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white fw-bold">Salary History (Edit Monthly Logic)</div>
+            <div class="card-body">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Month/Year</th>
+                            <th>Net Salary</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in salary_history %}
+                        <tr>
+                            <td>{{ record.month }} {{ record.year }}</td>
+                            <td>₹{{ record.net_salary }}</td>
+                            <td>
+                                {% if record.manual_mode %}
+                                <span class="badge bg-warning text-dark">Manual Entry</span>
+                                {% else %}
+                                <span class="badge bg-info text-dark">Auto Calc</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'edit_monthly_salary' record.pk %}" class="btn btn-sm btn-outline-secondary">Edit Month</a>
+                                <a href="{% url 'monthly_payslip' record.pk %}" class="btn btn-sm btn-primary">View Slip</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">No salary records found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

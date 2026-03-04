@@ -5,10 +5,26 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    # Auth
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', views.logout_view, name='logout'),
+    
+    # Employee Management
     path('', views.dashboard, name='dashboard'), 
     path('add/', views.employee_form, name='employee_add'),
     path('edit/<int:pk>/', views.employee_form, name='employee_edit'),
+    
+    # --- NEW: Monthly Salary Processing Paths ---
+    
+    # The page with the Dropdown & Month/Year/Leave inputs
+    path('process-salary/', views.process_monthly_salary, name='process_salary'),
+    
+    # The final monthly payslip (linked to MonthlySalary model PK)
+    path('monthly-payslip/<int:pk>/', views.monthly_payslip, name='monthly_payslip'),
+    
+    # Original basic payslip (optional, keep if you still need the old version)
     path('payslip/<int:pk>/', views.payslip, name='payslip'),
+    path('employee/<int:pk>/', views.employee_detail, name='employee_detail'),
+    path('salary/edit/<int:pk>/', views.edit_monthly_salary, name='edit_monthly_salary'),
 ]

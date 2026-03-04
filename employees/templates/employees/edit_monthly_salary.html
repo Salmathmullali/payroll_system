@@ -1,0 +1,57 @@
+{% extends 'employees/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Edit Monthly Salary: {{ record.employee.name }}</h5>
+                    <small>{{ record.month }} {{ record.year }}</small>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Leaves Taken</label>
+                            <input type="number" name="leaves" class="form-control" value="{{ record.leaves_taken }}">
+                            <small class="text-muted">Auto-deducts based on (Basic / 30) * leaves.</small>
+                        </div>
+
+                        <hr>
+
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" name="manual_mode" id="manualSwitch" {% if record.manual_mode %}checked{% endif %}>
+                            <label class="form-check-label fw-bold" for="manualSwitch">Enable Manual Override</label>
+                        </div>
+
+                        <div id="manualFields" style="display: {% if record.manual_mode %}block{% else %}none{% endif %};">
+                            <div class="mb-3">
+                                <label class="form-label">Manual Total Earnings</label>
+                                <input type="number" step="0.01" name="custom_earnings" class="form-control" value="{{ record.custom_earnings }}">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Manual Total Deductions</label>
+                                <input type="number" step="0.01" name="custom_deductions" class="form-control" value="{{ record.custom_deductions }}">
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'employee_detail' record.employee.pk %}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-success">Update Salary Record</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript to show/hide manual fields based on switch
+    document.getElementById('manualSwitch').addEventListener('change', function() {
+        document.getElementById('manualFields').style.display = this.checked ? 'block' : 'none';
+    });
+</script>
+{% endblock %}

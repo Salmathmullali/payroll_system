@@ -2,36 +2,45 @@
 {% block content %}
 
     <div class="container">
-        <div class="card">
-            <div class="card-header bg-white py-3">
-                <h5 class="mb-0 fw-bold">Employee Master Records</h5>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="fw-bold text-navy">Employee Master Records</h4>
+            <a href="{% url 'process_salary' %}" class="btn btn-primary shadow-sm">
+                <i class="bi bi-plus-circle"></i> Process Monthly Salary
+            </a>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3 border-bottom">
+                <h5 class="mb-0 fw-bold text-muted">Active Workforce</h5>
             </div>
             <div class="card-body p-0">
                 <table class="table table-hover align-middle mb-0">
-                    <thead>
+                    <thead class="bg-light">
                         <tr>
-                            <th class="ps-4">EMP ID</th>
-                            <th>Name</th>
-                            <th>Designation</th>
-                            <th>Email</th>
-                            <th class="text-center">Actions</th>
+                            <th class="ps-4 text-uppercase small fw-bold text-muted">EMP ID</th>
+                            <th class="text-uppercase small fw-bold text-muted">Name</th>
+                            <th class="text-uppercase small fw-bold text-muted">Designation</th>
+                            <th class="text-uppercase small fw-bold text-muted">Email</th>
+                            <th class="text-center text-uppercase small fw-bold text-muted">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for emp in employees %}
                         <tr>
-                            <td class="ps-4 fw-bold">{{ emp.emp_id }}</td>
-                            <td>{{ emp.name }}</td>
+                            <td class="ps-4 fw-bold text-primary">{{ emp.emp_id }}</td>
+                            <td class="fw-semibold">{{ emp.name }}</td>
                             <td>{{ emp.designation }}</td>
                             <td>{{ emp.email }}</td>
                             <td class="text-center">
-                                <a href="{% url 'employee_edit' emp.id %}" class="btn btn-sm btn-outline-primary px-3">Edit</a>
-                                <a href="{% url 'payslip' emp.id %}" class="btn btn-sm btn-success px-3">View Payslip</a>
+                                <a href="{% url 'employee_detail' emp.id %}" class="btn btn-sm btn-info text-white px-3 shadow-sm">View Details</a>
+                                <a href="{% url 'employee_edit' emp.id %}" class="btn btn-sm btn-outline-primary px-3 shadow-sm">Edit Profile</a>
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="5" class="text-center py-5 text-muted">No employees found. Please add a new record.</td>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <p class="mb-0">No employees found. Please add a new record.</p>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -39,6 +48,4 @@
             </div>
         </div>
     </div>
-<!-- </body>
-</html> -->
 {% endblock %}
