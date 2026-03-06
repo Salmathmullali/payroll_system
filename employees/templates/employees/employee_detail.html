@@ -17,7 +17,7 @@
                     <p><strong>Basic:</strong> ₹{{ employee.basic_salary }}</p>
                 </div>
                 <a href="{% url 'employee_edit' employee.pk %}" class="btn btn-outline-primary w-100 mb-2">Edit Profile</a>
-                <a href="{% url 'process_salary' %}" class="btn btn-success w-100">Generate New Payslip</a>
+                <a href="{% url 'process_salary' employee.id %}" class="btn btn-primary">Process Monthly Salary</a>
             </div>
         </div>
     </div>

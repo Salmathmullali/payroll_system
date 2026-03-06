@@ -125,3 +125,12 @@ STATIC_URL = 'static/'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'login'
+
+import os
+
+STATIC_URL = 'static/'
+
+# This tells Django where your static folder is located
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]

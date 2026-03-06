@@ -5,9 +5,11 @@ from .models import Employee, MonthlySalary # Import your new model here
 
 # ... (home, dashboard, logout_view, employee_form remain the same) ...
 def home(request):
-
-    return redirect('employees/dashboard.html')
-
+    # If user is already logged in, take them to dashboard
+    if request.user.is_authenticated:
+        return redirect('login')
+    # Otherwise, take them to the login page
+    return redirect('dashboard')
 
 
 @login_required
@@ -18,6 +20,12 @@ def dashboard(request):
         'employees': employees,      # For the table
         'all_employees': employees   # For the navbar dropdown
     })
+
+@login_required
+def employee_list(request):
+    # This is the new page showing all employees
+    employees = Employee.objects.all()
+    return render(request, 'employees/employee_list.html', {'employees': employees})
 
 
 def logout_view(request):
@@ -96,44 +104,28 @@ def payslip(request, pk):
     return render(request, 'employees/payslip.html', context)
 
 @login_required
-def process_monthly_salary(request):
-    """
-    New view to handle selecting an employee and calculating 
-    their monthly salary with manual override options.
-    """
-    employees = Employee.objects.all()
+def process_monthly_salary(request, emp_id):
+    employee = get_object_or_404(Employee, id=emp_id)
     
     if request.method == "POST":
-        # 1. Get Employee from Dropdown
-        emp_id = request.POST.get('employee_id')
-        employee = get_object_or_404(Employee, id=emp_id)
-        
-        # 2. Get Month, Year, and Leaves
-        month = request.POST.get('month')
-        year = request.POST.get('year')
-        leaves = int(request.POST.get('leaves', 0))
-        
-        # 3. Handle Manual Mode logic
-        is_manual = request.POST.get('manual_mode') == 'on'
-        manual_earn = float(request.POST.get('custom_earnings', 0) or 0)
-        manual_deduct = float(request.POST.get('custom_deductions', 0) or 0)
-
-        # 4. Create and Save the MonthlySalary record
-        # The .save() method in the model will handle the math automatically
+        # Create the record using the new model fields
         salary_record = MonthlySalary.objects.create(
             employee=employee,
-            month=month,
-            year=year,
-            leaves_taken=leaves,
-            manual_mode=is_manual,
-            custom_earnings=manual_earn,
-            custom_deductions=manual_deduct
+            month=request.POST.get('month'),
+            year=request.POST.get('year'),
+            leaves_taken=int(request.POST.get('leaves', 0)),
+            manual_mode=request.POST.get('manual_mode') == 'on',
+            # Now these will NOT cause a TypeError
+            da=float(request.POST.get('da', 0) or 0),
+            hra=float(request.POST.get('hra', 0) or 0),
+            pf=float(request.POST.get('pf', 0) or 0),
+            esi=float(request.POST.get('esi', 0) or 0),
+            custom_earnings=float(request.POST.get('custom_earnings', 0) or 0),
+            custom_deductions=float(request.POST.get('custom_deductions', 0) or 0)
         )
-        
-        # 5. Redirect to the payslip of this specific monthly record
         return redirect('monthly_payslip', pk=salary_record.pk)
 
-    return render(request, 'employees/salary_process_form.html', {'employees': employees})
+    return render(request, 'employees/salary_process_form.html', {'employee': employee})
 
 def monthly_payslip(request, pk):
     salary = get_object_or_404(MonthlySalary, pk=pk)

@@ -11,14 +11,16 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     
     # Employee Management
-    path('', views.dashboard, name='dashboard'), 
+    path('', views.home, name='home'),
+    path('dashboard/', views.dashboard, name='dashboard'),
     path('add/', views.employee_form, name='employee_add'),
     path('edit/<int:pk>/', views.employee_form, name='employee_edit'),
+    path('employees/', views.employee_list, name='employee_list'),
     
     # --- NEW: Monthly Salary Processing Paths ---
     
     # The page with the Dropdown & Month/Year/Leave inputs
-    path('process-salary/', views.process_monthly_salary, name='process_salary'),
+    path('process-salary/<int:emp_id>/', views.process_monthly_salary, name='process_salary'),
     
     # The final monthly payslip (linked to MonthlySalary model PK)
     path('monthly-payslip/<int:pk>/', views.monthly_payslip, name='monthly_payslip'),

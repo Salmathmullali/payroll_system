@@ -1,51 +1,37 @@
 {% extends 'employees/base.html' %}
-{% block content %}
+{% load static %}
 
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="fw-bold text-navy">Employee Master Records</h4>
-            <a href="{% url 'process_salary' %}" class="btn btn-primary shadow-sm">
-                <i class="bi bi-plus-circle"></i> Process Monthly Salary
+
+{% block content %}
+<style>
+    .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                    url("{% static 'images/aebbae61.jpg' %}"); 
+        background-size: cover;
+        background-position: center;
+        height: 80vh; /* Takes up 80% of the screen height */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    }
+    .hero-title { font-size: 4rem; font-weight: 800; }
+    .hero-subtitle { font-size: 1.5rem; margin-bottom: 2rem; }
+</style>
+
+<div class="container mt-3">
+    <div class="hero-section">
+        <div>
+            <h1 class="hero-title">ABC SOLUTIONS</h1>
+            <p class="hero-subtitle">Quality over Quantity. We value our People.</p>
+            
+            <a href="{% url 'employee_list' %}" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow">
+                <i class="bi bi-people-fill me-2"></i> View Current Employees
             </a>
         </div>
-
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3 border-bottom">
-                <h5 class="mb-0 fw-bold text-muted">Active Workforce</h5>
-            </div>
-            <div class="card-body p-0">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="bg-light">
-                        <tr>
-                            <th class="ps-4 text-uppercase small fw-bold text-muted">EMP ID</th>
-                            <th class="text-uppercase small fw-bold text-muted">Name</th>
-                            <th class="text-uppercase small fw-bold text-muted">Designation</th>
-                            <th class="text-uppercase small fw-bold text-muted">Email</th>
-                            <th class="text-center text-uppercase small fw-bold text-muted">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for emp in employees %}
-                        <tr>
-                            <td class="ps-4 fw-bold text-primary">{{ emp.emp_id }}</td>
-                            <td class="fw-semibold">{{ emp.name }}</td>
-                            <td>{{ emp.designation }}</td>
-                            <td>{{ emp.email }}</td>
-                            <td class="text-center">
-                                <a href="{% url 'employee_detail' emp.id %}" class="btn btn-sm btn-info text-white px-3 shadow-sm">View Details</a>
-                                <a href="{% url 'employee_edit' emp.id %}" class="btn btn-sm btn-outline-primary px-3 shadow-sm">Edit Profile</a>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="5" class="text-center py-5 text-muted">
-                                <p class="mb-0">No employees found. Please add a new record.</p>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
     </div>
+</div>
 {% endblock %}

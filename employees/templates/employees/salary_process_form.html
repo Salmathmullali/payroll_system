@@ -1,25 +1,110 @@
-<form method="POST">
-    {% csrf_token %}
-    <label>Select Employee:</label>
-    <select name="employee_id" required>
-        {% for emp in employees %}
-            <option value="{{ emp.id }}">{{ emp.name }} ({{ emp.emp_id }})</option>
-        {% endfor %}
-    </select>
+{% extends 'employees/base.html' %}
 
-    <input type="text" name="month" placeholder="Month (e.g. March)" required>
-    <input type="number" name="year" value="2026" required>
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="card shadow border-0">
+            <div class="card-header bg-primary text-white py-3">
+                <h5 class="mb-0 fw-bold">Process Salary for: {{ employee.name }}</h5>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="alert alert-info border-0 shadow-sm d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="small text-uppercase text-muted d-block">Employee Name</span>
+                            <span class="fw-bold h5 mb-0">{{ employee.name }}</span>
+                        </div>
+                        <div class="text-end">
+                            <span class="small text-uppercase text-muted d-block">Designation</span>
+                            <span class="badge bg-primary">{{ employee.designation }}</span>
+                        </div>
+                    </div>
 
-    <label>Leaves Taken:</label>
-    <input type="number" name="leaves" value="0">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Salary Month</label>
+                            <select name="month" class="form-select" required>
+                                <option>January</option><option>February</option><option>March</option>
+                                <option>April</option><option>May</option><option>June</option>
+                                <option>July</option><option>August</option><option>September</option>
+                                <option>October</option><option>November</option><option>December</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Year</label>
+                            <input type="number" name="year" class="form-control" value="2026" required>
+                        </div>
+                    </div>
 
-    <hr>
-    <label>
-        <input type="checkbox" name="manual_mode"> Manual Calculation Mode
-    </label>
-    <br>
-    <input type="number" name="custom_earnings" placeholder="Total Earning Override">
-    <input type="number" name="custom_deductions" placeholder="Total Deduction Override">
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Leaves Taken (LOP)</label>
+                        <div class="input-group">
+                            <input type="number" name="leaves" class="form-control" value="0" min="0">
+                            <span class="input-group-text">Days</span>
+                        </div>
+                    </div>
 
-    <button type="submit">Calculate & Generate Payslip</button>
-</form>
+                    <h6 class="fw-bold text-navy mb-3 border-bottom pb-2">Salary Components (Manual Entry)</h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <label class="small fw-bold">DA</label>
+                            <input type="number" step="0.01" name="da" class="form-control" placeholder="0.00">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="small fw-bold">HRA</label>
+                            <input type="number" step="0.01" name="hra" class="form-control" placeholder="0.00">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="small fw-bold">PF</label>
+                            <input type="number" step="0.01" name="pf" class="form-control" placeholder="0.00">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="small fw-bold">ESI</label>
+                            <input type="number" step="0.01" name="esi" class="form-control" placeholder="0.00">
+                        </div>
+                    </div>
+
+                    <div class="card bg-light border-0 mb-4">
+                        <div class="card-body">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="manual_mode" id="manualMode">
+                                <label class="form-check-label fw-bold text-danger" for="manualMode">
+                                    Full Manual Override (Bypass All)
+                                </label>
+                            </div>
+                            <div id="manualInputFields" style="display: none;" class="mt-3">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="small fw-bold">Total Gross Earnings</label>
+                                        <input type="number" name="custom_earnings" class="form-control" placeholder="0.00">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="small fw-bold">Total Deductions</label>
+                                        <input type="number" name="custom_deductions" class="form-control" placeholder="0.00">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-lg shadow-sm">
+                            Generate & Save Payslip
+                        </button>
+                        <a href="{% url 'employee_detail' employee.id %}" class="btn btn-link text-muted">Back to Profile</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('manualMode').addEventListener('change', function() {
+        const fields = document.getElementById('manualInputFields');
+        fields.style.display = this.checked ? 'block' : 'none';
+    });
+</script>
+{% endblock %}
