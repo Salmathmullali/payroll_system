@@ -51,30 +51,26 @@ class MonthlySalary(models.Model):
     net_salary = models.FloatField(null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        
         if self.manual_mode:
-            
             self.calculated_gross = self.custom_earnings
             self.calculated_deduction = self.custom_deductions
         else:
             basic = self.employee.basic_salary
             
-            da_val = self.da if (self.da and self.da > 0) else (basic * self.employee.da_percent / 100)
-            hra_val = self.hra if (self.hra and self.hra > 0) else (basic * self.employee.hra_percent / 100)
+            # Calculate and STORE the values so they appear on the payslip
+            self.da = (basic * self.employee.da_percent) / 100
+            self.hra = (basic * self.employee.hra_percent) / 100
             other = (basic * self.employee.other_percent) / 100
             
-            pf_val = self.pf if (self.pf and self.pf > 0) else (basic * self.employee.pf_percent / 100)
-            esi_val = self.esi if (self.esi and self.esi > 0) else (basic * self.employee.esi_percent / 100)
+            # Statutory deductions
+            self.pf = (basic * self.employee.pf_percent) / 100
+            self.esi = (basic * self.employee.esi_percent) / 100
             
-            
+            # Leave calculation
             leave_cut = (basic / 30) * self.leaves_taken
 
-            self.calculated_gross = basic + da_val + hra_val + other
-            self.calculated_deduction = pf_val + esi_val + leave_cut
+            self.calculated_gross = basic + self.da + self.hra + other
+            self.calculated_deduction = self.pf + self.esi + leave_cut
         
-       
         self.net_salary = self.calculated_gross - self.calculated_deduction
         super().save(*args, **kwargs)
-
-    def __str__(self):
-        return f"{self.employee.name} - {self.month} {self.year}"

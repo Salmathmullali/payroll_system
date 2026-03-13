@@ -1,37 +1,73 @@
 {% extends 'employees/base.html' %}
+
 {% load static %}
 
 
+
+
+
 {% block content %}
+
 <style>
+
     .hero-section {
-        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                    url("{% static 'images/aebbae61.jpg' %}"); 
+
+        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+
+                    url("{% static 'images/aebbae61.jpg' %}");
+
         background-size: cover;
+
         background-position: center;
+
         height: 80vh; /* Takes up 80% of the screen height */
+
         display: flex;
+
         align-items: center;
+
         justify-content: center;
+
         text-align: center;
+
         color: white;
+
         border-radius: 20px;
+
         box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+
     }
+
     .hero-title { font-size: 4rem; font-weight: 800; }
+
     .hero-subtitle { font-size: 1.5rem; margin-bottom: 2rem; }
+
 </style>
 
+
+
 <div class="container mt-3">
+
     <div class="hero-section">
+
         <div>
+
             <h1 class="hero-title">ABC SOLUTIONS</h1>
+
             <p class="hero-subtitle">Quality over Quantity. We value our People.</p>
-            
-            <a href="{% url 'employee_list' %}" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow">
+
+           
+
+            <a href="{% url 'employee_full_list' %}" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow">
+
                 <i class="bi bi-people-fill me-2"></i> View Current Employees
+
             </a>
+
         </div>
+
     </div>
+
 </div>
+
 {% endblock %}

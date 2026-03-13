@@ -26,6 +26,7 @@
     .btn-save:hover {
         background-color: #0d1440;
     }
+    .text-navy { color: #1a237e; }
 </style>
 
 <div class="container-fluid px-4 py-4">
@@ -36,8 +37,8 @@
             </h2>
             <p class="text-muted">Fill in the master records for the payroll system.</p>
         </div>
-        <a href="{% url 'employee_list' %}" class="btn btn-outline-secondary rounded-pill px-4">
-            <i class="bi bi-arrow-left"></i> Back to Directory
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary rounded-pill px-4">
+            <i class="bi bi-arrow-left"></i> Back to Dashboard
         </a>
     </div>
 
@@ -50,7 +51,7 @@
                     <div class="row g-4">
                         <div class="col-md-8">
                             <label class="form-label fw-bold">Full Name</label>
-                            <input type="text" name="name" class="form-control form-control-lg" placeholder="e.g. abc company" value="{{ employee.name|default:'' }}" required>
+                            <input type="text" name="name" class="form-control form-control-lg" placeholder="Enter Full Name" value="{{ employee.name|default:'' }}" required>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label fw-bold">Employee ID</label>
@@ -64,8 +65,32 @@
                             <label class="form-label fw-bold">Basic Salary (Monthly)</label>
                             <div class="input-group">
                                 <span class="input-group-text">₹</span>
-                                <input type="number" name="basic_salary" class="form-control" placeholder="0.00" value="{{ employee.basic_salary|default:'' }}" required>
+                                <input type="number" step="0.01" name="basic_salary" class="form-control" placeholder="0.00" value="{{ employee.basic_salary|default:'' }}" required>
                             </div>
+                        </div>
+                    </div>
+
+                    <h6 class="form-section-title mt-5">Allowances & Deductions (%)</h6>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">DA (%)</label>
+                            <input type="number" step="0.01" name="da_percent" class="form-control" value="{{ employee.da_percent|default:'50.0' }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">HRA (%)</label>
+                            <input type="number" step="0.01" name="hra_percent" class="form-control" value="{{ employee.hra_percent|default:'40.0' }}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Other (%)</label>
+                            <input type="number" step="0.01" name="other_percent" class="form-control" value="{{ employee.other_percent|default:'10.0' }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">PF Deduction (%)</label>
+                            <input type="number" step="0.01" name="pf_percent" class="form-control" value="{{ employee.pf_percent|default:'12.0' }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">ESI Deduction (%)</label>
+                            <input type="number" step="0.01" name="esi_percent" class="form-control" value="{{ employee.esi_percent|default:'0.75' }}" required>
                         </div>
                     </div>
 
@@ -89,11 +114,12 @@
 
             <div class="col-lg-4">
                 <div class="card bg-light border-0 p-4 mb-4">
-                    <h5 class="fw-bold text-navy">Instructions</h5>
+                    <h5 class="fw-bold text-navy">Payroll Logic</h5>
+                    <p class="small text-muted">The percentages entered will be applied to the <b>Basic Salary</b> during monthly processing.</p>
                     <ul class="small text-muted ps-3">
-                        <li class="mb-2">Ensure the <b>Employee ID</b> is unique to avoid conflicts.</li>
-                        <li class="mb-2">The <b>Basic Salary</b> entered here will be used as the base for all automated allowances (DA, HRA).</li>
-                        <li>Double-check the <b>Email Address</b> as it will be used for sending digital payslips.</li>
+                        <li class="mb-2"><b>DA/HRA:</b> Automated based on percentages set here.</li>
+                        <li class="mb-2"><b>PF/ESI:</b> Deducted from gross/basic based on percentages set here.</li>
+                        <li><b>Monthly Process:</b> You will not need to enter these values again every month.</li>
                     </ul>
                 </div>
                 

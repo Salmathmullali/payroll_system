@@ -29,4 +29,10 @@ urlpatterns = [
     path('payslip/<int:pk>/', views.payslip, name='payslip'),
     path('employee/<int:pk>/', views.employee_detail, name='employee_detail'),
     path('salary/edit/<int:pk>/', views.edit_monthly_salary, name='edit_monthly_salary'),
+    # The "Specific" way (from employee profile)
+    path('employee/<int:emp_id>/process/', views.process_monthly_salary, name='process_monthly_salary'),
+
+# The "Global" way (Inexoft's new requirement)
+    path('payroll/process/', views.global_monthly_process, name='global_monthly_process'),
+    path('employees/list/', views.emp_full_list, name='employee_full_list'),
 ]

@@ -17,7 +17,7 @@
                 <div class="col-6 text-end">
                     <h5 class="fw-bold">Payroll Info</h5>
                     <p class="mb-1"><strong>Leaves:</strong> {{ salary.leaves_taken }}</p>
-                    <p class="mb-1"><strong>Calculation:</strong> 
+                    <p class="mb-1"><strong>Status:</strong> 
                         {% if salary.manual_mode %}
                         <span class="badge bg-warning text-dark">Manual Override</span>
                         {% else %}
@@ -30,35 +30,69 @@
             <table class="table table-bordered">
                 <thead class="bg-light">
                     <tr>
-                        <th>Earnings</th>
+                        <th>Earnings Description</th>
                         <th class="text-end">Amount (₹)</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Total Gross (Basic + Allowances)</td>
-                        <td class="text-end">{{ salary.calculated_gross|floatformat:2 }}</td>
+                        <td>Basic Salary</td>
+                        <td class="text-end">{{ salary.employee.basic_salary|floatformat:2 }}</td>
                     </tr>
-                    <tr class="table-secondary">
-                        <th>Deductions</th>
-                        <th class="text-end">Amount (₹)</th>
+                    {% if not salary.manual_mode %}
+                    <tr>
+                        <td>Dearness Allowance ({{ salary.employee.da_percent }}%)</td>
+                        <td class="text-end">{{ salary.da|floatformat:2 }}</td>
                     </tr>
                     <tr>
-                        <td>Total Deductions (PF, ESI, Leaves)</td>
+                        <td>HRA ({{ salary.employee.hra_percent }}%)</td>
+                        <td class="text-end">{{ salary.hra|floatformat:2 }}</td>
+                    </tr>
+                    {% endif %}
+                    
+                    <tr class="fw-bold">
+                        <td>Total Gross Earnings</td>
+                        <td class="text-end">{{ salary.calculated_gross|floatformat:2 }}</td>
+                    </tr>
+
+                    <tr class="table-secondary">
+                        <th colspan="2">Deductions</th>
+                    </tr>
+                    {% if not salary.manual_mode %}
+                    <tr>
+                        <td>Provident Fund ({{ salary.employee.pf_percent }}%)</td>
+                        <td class="text-end text-danger">- {{ salary.pf|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                        <td>ESI ({{ salary.employee.esi_percent }}%)</td>
+                        <td class="text-end text-danger">- {{ salary.esi|floatformat:2 }}</td>
+                    </tr>
+                    {% if salary.leaves_taken > 0 %}
+                    <tr>
+                        <td>Leave Deduction ({{ salary.leaves_taken }} days)</td>
+                        <td class="text-end text-danger">- {{ salary.calculated_deduction|add:salary.pf|add:salary.esi|floatformat:2 }}</td>
+                    </tr>
+                    {% endif %}
+                    {% endif %}
+                    <tr class="fw-bold">
+                        <td>Total Deductions</td>
                         <td class="text-end text-danger">- {{ salary.calculated_deduction|floatformat:2 }}</td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr class="table-dark">
                         <th class="fs-5">Net Payable Salary</th>
-                        <th class="text-end fs-5">₹ {{ salary.net_salary|floatformat:2 }}</th>
+                        <th class="text-end fs-5">₹ {{ salary.net_salary|floatformat:0 }}</th>
                     </tr>
                 </tfoot>
             </table>
 
             <div class="mt-5 d-flex justify-content-between no-print">
-                <button onclick="window.print()" class="btn btn-outline-dark px-4">Print Payslip</button>
-                <a href="{% url 'employee_detail' salary.employee.pk %}" class="btn btn-primary px-4">Back to Employee</a>
+                <button onclick="window.print()" class="btn btn-outline-dark px-4">
+                    <i class="bi bi-printer me-2"></i>Print Payslip
+                </button>
+                <a href="{% url 'global_monthly_process' %}" class="btn btn-secondary px-4">Process Next</a>
+                <a href="{% url 'employee_detail' salary.employee.pk %}" class="btn btn-primary px-4">View Profile</a>
             </div>
         </div>
     </div>
@@ -68,7 +102,8 @@
     @media print {
         .no-print { display: none !important; }
         .navbar { display: none !important; }
-        .card { border: none !important; shadow: none !important; }
+        .card { border: none !important; box-shadow: none !important; }
+        .container { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
     }
 </style>
 {% endblock %}
